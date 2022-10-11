@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 
 module.exports = () => {
-    mongoose.connect('mongodb://localhost:27017/test', () => {
+    mongoose.connect(process.env.DB_URL, () => {
         console.log("Database connection successfully");
     })
 }

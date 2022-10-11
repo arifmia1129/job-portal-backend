@@ -21,18 +21,17 @@ const jobInfoSchema = mongoose.Schema({
         name: String,
         email: {
             type: String,
-            validate: [validator.isEmail, "Provide a valid email"]
-        },
-        id: {
-            type: ObjectId,
-            ref: "HiringManager"
+            validate: [validator.isEmail, "Provide a valid email"],
+            ref: "User"
         }
     },
     location: {
         type: String,
         required: true,
+        lowercase: true
     },
-    type: {
+    jobType: {
+        type: String,
         enum: {
             values: ["programmer", "manager", "designer", "others"],
             message: "{VALUE} is not a valid job type."
@@ -40,3 +39,7 @@ const jobInfoSchema = mongoose.Schema({
     },
     deadline: String
 })
+
+const JobInfo = mongoose.model("JobInfo", jobInfoSchema);
+
+module.exports = JobInfo;
