@@ -21,7 +21,10 @@ const jobInfoSchema = mongoose.Schema({
         name: String,
         email: {
             type: String,
-            validate: [validator.isEmail, "Provide a valid email"],
+            validate: [validator.isEmail, "Provide a valid email"]
+        },
+        id: {
+            type: ObjectId,
             ref: "User"
         }
     },
