@@ -1,4 +1,4 @@
-const { signupService, loggedInUser } = require("../services/user.service");
+const { signupService, loggedInUser, getMeService } = require("../services/user.service");
 const { generateToken } = require("../utils/token");
 
 exports.signup = async (req, res) => {
@@ -54,7 +54,7 @@ exports.login = async (req, res) => {
             })
         }
 
-        const token = generateToken();
+        const token = generateToken(user);
 
         const { password: pwd, ...others } = user.toObject();
 
@@ -74,3 +74,24 @@ exports.login = async (req, res) => {
         })
     }
 }
+
+
+exports.getMe = async (req, res) => {
+    try {
+        const user = await getMeService(req?.user?.email);
+        const { password, ...others } = user.toObject();
+        res.status(200).json({
+            status: "success",
+            message: "Successfully get user",
+            user: others
+        })
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: "Couldn't get user",
+            error: error.message
+        })
+    }
+}
+
+

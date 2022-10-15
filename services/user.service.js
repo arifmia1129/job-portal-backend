@@ -7,3 +7,7 @@ exports.signupService = async (user) => {
 exports.loggedInUser = async (email) => {
     return await User.findOne({ email });
 }
+
+exports.getMeService = async (email) => {
+    return await User.findOne({ email });
+}
