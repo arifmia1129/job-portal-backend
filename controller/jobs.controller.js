@@ -1,4 +1,6 @@
-const { createJobService, updateJobService, getJobsService } = require("../services/jobs.service")
+const { createJobService, updateJobService, getJobsService, getUserService, getJobService } = require("../services/jobs.service");
+const { getJobServices } = require("../services/manager.service");
+const { getMeService } = require("../services/user.service");
 
 exports.createJob = async (req, res) => {
     try {
@@ -61,6 +63,23 @@ exports.getJobs = async (req, res) => {
     }
 }
 
+exports.getJob = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const job = await getJobServices(id);
+        res.status(200).json({
+            status: "success",
+            message: "Successfully get jobs",
+            job
+        })
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: "Couldn't get jobs",
+            error: error.message
+        })
+    }
+}
 
 exports.updateJob = async (req, res) => {
     try {
@@ -74,6 +93,50 @@ exports.updateJob = async (req, res) => {
         res.status(400).json({
             status: "fail",
             message: "Couldn't updated the job",
+            error: error.message
+        })
+    }
+}
+exports.applyJob = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await getMeService(req?.user?.email);
+        const job = await getJobService(id);
+
+        const date = new Date().toISOString().split('T')[0];
+
+
+        if (new Date(job.deadline) < new Date(date)) {
+            return res.status(400).json({
+                status: 'fail',
+                message: "Deadline over. Can't apply",
+            })
+        }
+
+        if (user?.appliedJobs.includes(id)) {
+            return res.status(400).json({
+                status: "fail",
+                message: "Already applied for this job"
+            })
+        }
+
+
+        user?.appliedJobs.push(id);
+        job?.resume.push(req.file.filename)
+
+
+        await user?.save({ validatorBeforeSave: false })
+        await job?.save({ validatorBeforeSave: false })
+
+        res.status(200).json({
+            status: "success",
+            message: "Successfully applied job",
+            resume: req.file
+        })
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: "Couldn't applied the job",
             error: error.message
         })
     }

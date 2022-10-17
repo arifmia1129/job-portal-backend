@@ -59,6 +59,10 @@ const userSchema = mongoose.Schema({
         },
         default: "active"
     },
+    appliedJobs: [{
+        type: ObjectId,
+        ref: "JobInfo"
+    }],
     confirmationToken: String,
     confirmationTokenExpireAt: Date
 })

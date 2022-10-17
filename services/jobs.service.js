@@ -4,6 +4,10 @@ exports.createJobService = async (job) => {
     return await JobInfo.create(job);
 }
 
+exports.getJobService = async (id) => {
+    return await JobInfo.findOne({ _id: id });
+}
+
 exports.getJobsService = async (filters, queries) => {
     const jobs = await JobInfo.find(filters)
         .skip(queries.skip)
@@ -19,3 +23,4 @@ exports.getJobsService = async (filters, queries) => {
 exports.updateJobService = async (id, data) => {
     return await JobInfo.updateOne({ _id: id }, data, { runValidators: true });
 }
+

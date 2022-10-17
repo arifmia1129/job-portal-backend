@@ -40,6 +40,9 @@ const jobInfoSchema = mongoose.Schema({
             message: "{VALUE} is not a valid job type."
         }
     },
+    resume: [{
+        type: String
+    }],
     deadline: String
 })
 
